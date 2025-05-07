@@ -1,3 +1,26 @@
+<?php
+include "koneksi.php";
+if (isset($_POST['simpan'])) {
+  $auto = mysqli_query($koneksi, "select max(id_ktg) as max_code from tb_ktg");
+  $hasil = mysqli_fetch_array($auto);
+  $code = $hasil['max_code'];
+  $urutan = (int)substr($code, 1, 3);
+  $urutan++;
+  $huruf = "K";
+  $id_ktg = $huruf . sprintf("%03s", $urutan);
+  $nm_ktg = $_POST['nm_ktg'];
+
+  $query = mysqli_query($koneksi, "INSERT INTO tb_ktg(id_ktg, nm_ktg) VALUES ('$id_ktg', '$nm_ktg')");
+  if ($query) {
+    echo "<script>alert('Data berhasil ditambahkan!')</script>";
+    header("refresh:0, kategori.php");
+  } else {
+    echo "<script>alert('Data gagal ditambahkan!')</script>";
+    header("refresh:0, kategori.php");
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +28,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Beranda - Jaya_Mart Admin</title>
+  <title>Kategori Produk - Jaya_Mart Admin</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -43,15 +66,14 @@
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
+
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Jaya_Mart</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
-
-    
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -59,8 +81,7 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="assets/img/kucing.jpeg" alt="Profile" class="rounded-circle">
-           
+            <img src="assets/img/haechan.jpg" alt="Profile" class="rounded-circle">
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -71,9 +92,11 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+
             <li>
               <hr class="dropdown-divider">
             </li>
+
             <li>
               <a class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>
@@ -91,17 +114,19 @@
 
   <!-- ======= Sidebar ======= -->
   <aside id="sidebar" class="sidebar">
-   <ul class="sidebar-nav" id="sidebar-nav">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
       <li class="nav-item">
         <a class="nav-link " href="index.php">
           <i class="bi bi-grid"></i>
           <span>Beranda</span>
         </a>
-      </li><!-- End Dashboard Nav -->
+      </li><!-- End Beranda Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="kategori.php">
-        <i class="bi bi-card-checklist"></i>
+          <i class="bi bi-box-seam"></i>
           <span>Kategori Produk</span>
         </a>
       </li><!-- End Profile Page Nav -->
@@ -115,10 +140,10 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="keranjang.php">
-        <i class="bi bi-bag-fill"></i>
+          <i class="bi bi-envelope"></i>
           <span>Keranjang</span>
         </a>
-      </li><!-- End Contac keranjang Page Nav -->
+      </li><!-- End Keranjang Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="transaksi.php">
@@ -136,10 +161,10 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="pengguna.php">
-          <i class="bi bi-dash-circle"></i>
+          <i class="bi bi-person"></i>
           <span>Pengguna</span>
         </a>
-      </li><!-- End pengguna Page Nav -->
+      </li><!-- End Pengguna Page Nav -->
 
     </ul>
 
@@ -148,76 +173,34 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Beranda</h1>
+      <h1>Kategori Produk</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
-          <li class="breadcrumb-item active">Beranda</li>
+          <li class="breadcrumb-item">Kategori Produk</li>
+          <li class="breadcrumb-item active">Tambah</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
-    <section class="section dashboard">
+
+    <section class="section">
       <div class="row">
-        <!-- Left side columns -->
-        <div class="col-lg-8">
-          <div class="row">
-
-            <!-- Welcome Card -->
-            <div class="col-12">
-              <div class="card info-card customers-card shadow-sm w-100">
-                <div class="cars-body text-center py-4">
-                  <h4 class="mb-2"> Selamat datang di Website Admin
-                  <strong>Jaya_Mart!</strong></h4>
-                  <ul class="text-muted small mb-0">Kelola produk, transaksi, dan pelanggan dengan mudah.</p>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <form class="row g-3 mt-2" method="post">
+                <div class="col-12">
+                  <label for="nm_ktg" class="form-label">Nama Kategori</label>
+                  <input type="text" class="form-control" id="nm_ktg" name="nm_ktg" placeholder="Masukkan Nama Kategori Produk">
                 </div>
-               </div>
-              </div>           
-            <!-- End Welcome Card -->
-            <!-- Sales Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                <h5 class="card-title">Pesanan <span>| Semua Waktu</span></h5>
-
-                 <div class="d-flex align-items-center">
-                   <div class="card-icon rounded-circle d-flex align-items-center 
-                   justify-content-center">
-                   <i class="bi bi-basket"></i> <!-- Ikon Keranjang belanja -->
-                   </div>
-                   <div class="ps-3">
-                     <h6>145</h6>
-                    </div>
-                  </div>
+                <div class="text-center">
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
                 </div>
-
-              </div>
-            </div><!-- End Sales Card -->
-
-            <!-- Revenue Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card revenue-card">
-
-              <div class="card-body">
-              <h5 class="card-title">Pendapatan <span>| Hari ini</span></h5>
-
-              <div class="d-flex align-items-center">
-              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-              <i class="bi bi-currency-dollar"></i>
-           </div>
-           <div class="ps-3">
-             <h6>Rp. 32.555</h6>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Revenue Card -->
-
-           
-
+              </form>
+            </div>
           </div>
-        </div><!-- End Left side columns -->
-
+        </div>
       </div>
     </section>
 
@@ -226,14 +209,15 @@
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>Freshly.id</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>Jaya_Mart</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
       <!-- All the links in the footer should remain intact. -->
       <!-- You can delete the links only if you purchased the pro version. -->
       <!-- Licensing information: https://bootstrapmade.com/license/ -->
       <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://instagram.com/vcrstshr_/" target="_blank">Viola Cristiana</a>
+      Designed by <a href="https://www.instagram.com/arletaamaya?igsh=ejZ5ZHVndXBpeGNw"
+        target="_blank">Viola Cristiana</a>
     </div>
   </footer><!-- End Footer -->
 
